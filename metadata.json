@@ -1,0 +1,6 @@
+{
+  "name": "Missed Call Revenue Calculator",
+  "description": "A high-converting calculator to estimate lost revenue from missed business calls, complete with custom configurations and embeddable code generation for websites.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
