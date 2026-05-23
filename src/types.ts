@@ -1,3 +1,18 @@
+/**
+ * Missed Call Revenue Calculator
+ * Version: v2
+ * Changes: Added User & Admin authentication state interfaces, role-based control types, 
+ * and elevated settings for dynamic missed call service automation configuration.
+ */
+
+export type UserRole = 'admin' | 'user';
+
+export interface AppUser {
+  email: string;
+  role: UserRole;
+  name: string;
+}
+
 export interface CalculatorInputs {
   monthlyCalls: number;
   missedCallRate: number; // in %
@@ -42,3 +57,4 @@ export const CALCULATOR_THEMES = {
     inputBg: 'bg-slate-950/60 border-slate-800 text-slate-100',
   }
 };
+

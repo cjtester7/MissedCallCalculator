@@ -1,13 +1,29 @@
+/**
+ * Missed Call Revenue Calculator
+ * Version: v2
+ * Changes: Added dynamic missed-call automation cost styling, admin controls for editing auto cost values,
+ * and role-based block visibility gating to hide the automation cost comparisons for standard user accounts.
+ */
+
 import { motion } from 'motion/react';
 import { CalculationResults } from '../types';
-import { AlertCircle, ArrowUpRight, Award, TrendingDown, DollarSign, Calendar, Flame } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, Award, TrendingDown, DollarSign, Calendar, Flame, Settings } from 'lucide-react';
 
 interface StatsDashboardProps {
   results: CalculationResults;
   dealSize: number;
+  isAdmin: boolean;
+  automationCost: number;
+  onAutomationCostChange?: (cost: number) => void;
 }
 
-export default function StatsDashboard({ results, dealSize }: StatsDashboardProps) {
+export default function StatsDashboard({
+  results,
+  dealSize,
+  isAdmin,
+  automationCost,
+  onAutomationCostChange,
+}: StatsDashboardProps) {
   const { missedCallsCount, lostOpportunities, monthlyLostRevenue, annualLostRevenue } = results;
 
   const formattedMonth = new Intl.NumberFormat('en-US', {
@@ -41,10 +57,8 @@ export default function StatsDashboard({ results, dealSize }: StatsDashboardProp
 
   const risk = getRiskDetails();
 
-  // Simulated average cost of a virtual text-back automation
-  const automationCost = 149; // $149/mo
   const recoveryROI = monthlyLostRevenue > 0
-    ? Math.round(((monthlyLostRevenue - automationCost) / automationCost) * 100)
+    ? Math.round(((monthlyLostRevenue - automationCost) / automationCost) * 105)
     : 0;
 
   return (
@@ -157,66 +171,100 @@ export default function StatsDashboard({ results, dealSize }: StatsDashboardProp
         </div>
       </div>
 
-      {/* Call flow comparison */}
-      <div className="p-5 md:p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.05] relative overflow-hidden">
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-1 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-              <Award className="w-4 h-4" />
-            </div>
-            <h4 className="font-bold text-sm tracking-tight text-slate-800 dark:text-white">
-              The Auto-Recovery Breakthrough
-            </h4>
+      {/* Admin Slider Control to change Monthly Cost */}
+      {isAdmin && onAutomationCostChange && (
+        <div className="p-4 rounded-xl border border-dashed border-slate-300 dark:border-neutral-800 bg-[#161616]/30 space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-emerald-450 uppercase tracking-wider flex items-center gap-1.5">
+              <Settings className="w-3.5 h-3.5 text-emerald-500" />
+              Adjust Automation Cost (Admin Only)
+            </span>
+            <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-black px-2 py-0.5 rounded text-emerald-500">
+              ${automationCost}/mo
+            </span>
           </div>
-
-          <p className="text-xs text-slate-500 dark:text-slate-450 leading-relaxed mb-4">
-            By deploying a standard SMS auto-reply workflow on missed calls, you capture **up to 62% of missed leads** in the first 2 minutes. Let's compare the cost of doing nothing vs automating:
-          </p>
-
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between text-xs mb-1 font-semibold dark:text-slate-300">
-                <span>Cost of Missed Calls (Lost Revenue)</span>
-                <span className="text-rose-500 font-bold">{formattedMonth}/mo</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 0.8 }}
-                  className={`${risk.barColor} h-2 rounded-full`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs mb-1 font-semibold dark:text-slate-300">
-                <span>Missed Call Text-Back Automation Cost</span>
-                <span className="text-emerald-500 font-bold">${automationCost}/mo</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.max(1.5, Math.min(100, (automationCost / Math.max(1, monthlyLostRevenue)) * 100))}%` }}
-                  transition={{ duration: 0.8 }}
-                  className="bg-emerald-500 h-2 rounded-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {monthlyLostRevenue > automationCost && (
-            <div className="mt-4 pt-3 border-t border-emerald-500/10 flex items-center justify-between text-xs leading-none">
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">
-                Recovers {formattedMonth} with {recoveryROI.toLocaleString()}% ROI
-              </span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-extrabold flex items-center gap-0.5">
-                <ArrowUpRight className="w-3 h-3" /> ROI Engine
-              </span>
-            </div>
-          )}
+          <input
+            type="range"
+            min="49"
+            max="1000"
+            step="10"
+            value={automationCost}
+            onChange={(e) => onAutomationCostChange(parseInt(e.target.value))}
+            className="w-full h-1 bg-slate-250 dark:bg-neutral-850 accent-emerald-500"
+          />
+          <span className="block text-[10px] text-slate-400 dark:text-gray-500">
+            Slide to dynamically change comparison and ROI math live on the charts below.
+          </span>
         </div>
-      </div>
+      )}
+
+      {/* Call flow comparison - ONLY VISIBLE TO ADMINS */}
+      {isAdmin ? (
+        <div className="p-5 md:p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.05] relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="p-1 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                <Award className="w-4 h-4" />
+              </div>
+              <h4 className="font-bold text-sm tracking-tight text-slate-800 dark:text-white">
+                The Auto-Recovery Breakthrough
+              </h4>
+            </div>
+
+            <p className="text-xs text-slate-500 dark:text-slate-450 leading-relaxed mb-4">
+              By deploying a standard SMS auto-reply workflow on missed calls, you capture **up to 62% of missed leads** in the first 2 minutes. Let's compare the cost of doing nothing vs automating:
+            </p>
+
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-xs mb-1 font-semibold dark:text-slate-300">
+                  <span>Cost of Missed Calls (Lost Revenue)</span>
+                  <span className="text-rose-500 font-bold">{formattedMonth}/mo</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.8 }}
+                    className={`${risk.barColor} h-2 rounded-full`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs mb-1 font-semibold dark:text-slate-300">
+                  <span>Missed Call Text-Back Automation Cost</span>
+                  <span className="text-emerald-505 font-bold text-emerald-600 dark:text-emerald-400">${automationCost}/mo</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.max(1.5, Math.min(100, (automationCost / Math.max(1, monthlyLostRevenue)) * 105))}%` }}
+                    transition={{ duration: 0.8 }}
+                    className="bg-emerald-500 h-2 rounded-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {monthlyLostRevenue > automationCost && (
+              <div className="mt-4 pt-3 border-t border-emerald-500/10 flex items-center justify-between text-xs leading-none">
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">
+                  Recovers {formattedMonth} with {recoveryROI.toLocaleString()}% ROI
+                </span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-extrabold flex items-center gap-0.5">
+                  <ArrowUpRight className="w-3 h-3" /> ROI Engine
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="p-4 bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl text-center text-xs text-slate-400 dark:text-slate-500">
+          🔒 Lock comparisons: Missed Call Text-Back Automation Cost is locked and loaded under preset configurations. Access admin settings to fine-tune automation ROI estimates.
+        </div>
+      )}
     </div>
   );
 }
+
