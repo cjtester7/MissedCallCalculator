@@ -1,13 +1,41 @@
+/*
+ * Missed Call Revenue Calculator Stylesheet
+ * Version: v3
+ * Changes: Enriched custom slate variables in the Tailwind theme block for seamless layout rendering.
+ * Adjusted CSS variables for borders and muted text to make gray highlights more visible and distinct in dark mode.
+ */
+
 @import "tailwindcss";
+
+@theme {
+  --color-slate-150: var(--slate-150);
+  --color-slate-205: var(--slate-205);
+  --color-slate-250: var(--slate-250);
+  --color-slate-350: var(--slate-350);
+  --color-slate-405: var(--slate-405);
+  --color-slate-450: var(--slate-450);
+  --color-slate-550: var(--slate-550);
+  --color-slate-650: var(--slate-650);
+}
 
 @layer base {
   :root {
     --bg-color: #050505;
     --card-bg: #111111;
     --accent: #10b981;
-    --text-muted: #9ca3af;
-    --border: #262626;
+    --text-muted: #cbd5e1;
+    --border: #333333;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    /* Custom slate colors for high-visibility in dark mode */
+    --slate-150: #1e293b;
+    --slate-205: #334155;
+    --slate-250: #334155;
+    --slate-350: #cbd5e1;
+    --slate-405: #94a3b8;
+    --slate-450: #cbd5e1;
+    --slate-550: #cbd5e1;
+    --slate-650: #e2e8f0;
   }
 
   :root.light-mode {
@@ -16,6 +44,16 @@
     --accent: #059669;
     --text-muted: #475569;
     --border: #e2e8f0;
+    
+    /* Custom slate colors in light mode */
+    --slate-150: #f1f5f9;
+    --slate-205: #e2e8f0;
+    --slate-250: #cbd5e1;
+    --slate-350: #cbd5e1;
+    --slate-405: #cbd5e1;
+    --slate-450: #64748b;
+    --slate-550: #475569;
+    --slate-650: #334155;
   }
 
   body {

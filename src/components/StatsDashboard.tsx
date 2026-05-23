@@ -1,8 +1,8 @@
 /**
  * Missed Call Revenue Calculator
- * Version: v2
- * Changes: Added dynamic missed-call automation cost styling, admin controls for editing auto cost values,
- * and role-based block visibility gating to hide the automation cost comparisons for standard user accounts.
+ * Version: v3
+ * Changes: Enhanced contrast of grey texts (e.g., changing slate-500/slate-400 to slate-300) in dark mode to prevent fading.
+ * Made the ROI and numerical descriptions much more visible and readable against the black background.
  */
 
 import { motion } from 'motion/react';
@@ -100,11 +100,11 @@ export default function StatsDashboard({
             <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               {formattedMonth}
             </span>
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">/ month</span>
+            <span className="text-xs text-slate-400 dark:text-slate-300 font-medium">/ month</span>
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-200/50 dark:border-slate-800/50 flex justify-between text-xs">
-            <span className="text-slate-400 dark:text-slate-500">Based on deal size:</span>
+            <span className="text-slate-400 dark:text-slate-300">Based on deal size:</span>
             <span className="font-semibold text-slate-700 dark:text-slate-300">{formattedDealSize} / deal</span>
           </div>
         </motion.div>
@@ -134,11 +134,11 @@ export default function StatsDashboard({
             <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400">
               {formattedYear}
             </span>
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">/ year</span>
+            <span className="text-xs text-slate-400 dark:text-slate-300 font-medium">/ year</span>
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-200/50 dark:border-slate-800/50 flex justify-between text-xs">
-            <span className="text-slate-400 dark:text-slate-500">Annual missed calls:</span>
+            <span className="text-slate-400 dark:text-slate-300">Annual missed calls:</span>
             <span className="font-semibold text-slate-700 dark:text-slate-300">{(missedCallsCount * 12).toLocaleString()} calls</span>
           </div>
         </motion.div>
@@ -147,7 +147,7 @@ export default function StatsDashboard({
       {/* Core Breakdown Metrics grid */}
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/15 p-4">
-          <span className="block text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">
+          <span className="block text-xs font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider mb-1">
             Missed Calls / Month
           </span>
           <span className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1">
@@ -159,12 +159,12 @@ export default function StatsDashboard({
         </div>
 
         <div className="rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/15 p-4">
-          <span className="block text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">
+          <span className="block text-xs font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider mb-1">
             Lost Deals / Month
           </span>
           <span className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1">
             {lostOpportunities.toLocaleString()}
-            <span className="text-xs font-normal text-slate-400 dark:text-slate-500">
+            <span className="text-xs font-normal text-slate-400 dark:text-slate-300">
               ({(lostOpportunities * 12).toLocaleString()}/year)
             </span>
           </span>

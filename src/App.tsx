@@ -1,8 +1,9 @@
 /**
  * Missed Call Revenue Calculator
- * Version: v2
- * Changes: Added a premium, modern login layout with two default accounts (Admin and limited User). 
- * Integrated role-based visibility to secure the text-back dynamic cost editing from standard roles while displaying admin tools to Admin.
+ * Version: v3
+ * Changes: Enhanced visibility of gray elements in dark mode for better legibility and contrast.
+ * Correctly synchronized the 'dark' utility class on the document root to activate Tailwind's dark selection styles.
+ * Refined light-gray borders and muted text properties to render as high-contrast sleeker grays on dark screens.
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -60,8 +61,10 @@ export default function App() {
     const root = document.documentElement;
     if (theme === 'light') {
       root.classList.add('light-mode');
+      root.classList.remove('dark');
     } else {
       root.classList.remove('light-mode');
+      root.classList.add('dark');
     }
   }, [theme]);
 
