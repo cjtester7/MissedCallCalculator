@@ -1,3 +1,10 @@
+/**
+ * Missed Call Revenue Calculator - Lead Capture Form
+ * Version: v2
+ * Changes: Enhanced contrast of the layout's privacy disclaimer text for high legibility.
+ * Ensures the note remains perfectly visible across extreme dark and bright backgrounds.
+ */
+
 import { useState, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Smartphone, MessageSquare, Send, CheckCircle2, Zap, Shield, Sparkles } from 'lucide-react';
@@ -146,7 +153,7 @@ export default function LeadCaptureForm({ monthlyLostRevenue, onSuccess }: LeadC
                 )}
               </button>
 
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500 pt-2 text-center">
+              <div className="flex items-center justify-center gap-2 text-xs text-slate-650 dark:text-slate-300 pt-2 text-center font-medium">
                 <Shield className="w-3.5 h-3.5 text-emerald-500" />
                 <span>We respect your privacy. No spam. Instant setup instruction delivered to phone.</span>
               </div>

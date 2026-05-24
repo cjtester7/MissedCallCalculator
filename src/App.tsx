@@ -1,9 +1,9 @@
 /**
  * Missed Call Revenue Calculator
- * Version: v3
- * Changes: Enhanced visibility of gray elements in dark mode for better legibility and contrast.
- * Correctly synchronized the 'dark' utility class on the document root to activate Tailwind's dark selection styles.
- * Refined light-gray borders and muted text properties to render as high-contrast sleeker grays on dark screens.
+ * Version: v4
+ * Changes: Enriched access control by hiding 'How This Works' and 'Get GHL Embed Widget' tabs from standard (limited) users.
+ * Confined the light/dark mode option solely to admin users, defaulting standard users securely to dark mode.
+ * Removed the gradient effect from the main title, rendering a high-contrast elegant selection in both themes.
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -67,6 +67,13 @@ export default function App() {
       root.classList.add('dark');
     }
   }, [theme]);
+
+  // Force dark mode for limited (non-admin) users to fulfill security boundaries
+  useEffect(() => {
+    if (user && user.role !== 'admin' && theme !== 'dark') {
+      setTheme('dark');
+    }
+  }, [user, theme]);
 
   // Calculations
   const calcResults = (): CalculationResults => {
@@ -153,15 +160,6 @@ export default function App() {
       {!user ? (
         <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
           
-          <div className="absolute top-8 right-8">
-            <button
-              onClick={toggleTheme}
-              className="p-3 rounded-xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#111111] text-slate-600 dark:text-emerald-500 hover:scale-105 transition-all cursor-pointer shadow-md"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-emerald-450" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-          </div>
-
           <div className="max-w-md w-full space-y-8 bg-white dark:bg-[#111111] border border-slate-205/65 dark:border-neutral-800 rounded-3xl p-8 shadow-2xl relative z-10 transition-all">
             
             <div className="text-center">
@@ -305,14 +303,16 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Theme Toggle Button */}
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#111111] hover:bg-slate-100 dark:hover:bg-neutral-800 text-slate-600 dark:text-emerald-500 transition-all cursor-pointer shadow-sm shadow-slate-105"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-emerald-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-              </button>
+              {/* Theme Toggle Button (Admin Only) */}
+              {user.role === 'admin' && (
+                <button
+                  onClick={toggleTheme}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#111111] hover:bg-slate-100 dark:hover:bg-neutral-800 text-slate-600 dark:text-emerald-500 transition-all cursor-pointer shadow-sm shadow-slate-105"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4 text-emerald-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+                </button>
+              )}
             </div>
           </header>
 
@@ -323,7 +323,7 @@ export default function App() {
               Active Revenue Loss Assessment
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.1]">
-              Missed Call <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-555 via-teal-500 to-emerald-400 dark:from-emerald-400 dark:to-emerald-500">Revenue Drain</span> Calculator
+              Missed Call <span className="text-emerald-600 dark:text-emerald-400">Revenue Drain</span> Calculator
             </h2>
             <p className="mt-4 text-base md:text-lg text-slate-500 dark:text-gray-400 leading-relaxed max-w-2xl">
               Did you know **62% of inbound business calls go unanswered**? When clients get your voicemail, they immediately hang up and call your next competitor. Estimate your monthly losses below.
@@ -343,27 +343,31 @@ export default function App() {
               <Calculator className="w-4 h-4" /> Live Loss Simulator
             </button>
             
-            <button
-              onClick={() => setActiveTab('embed-code')}
-              className={`py-3 px-5 font-bold text-sm tracking-tight border-b-2 whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
-                activeTab === 'embed-code'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold'
-                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Code className="w-4 h-4" /> Get GHL Embed Widget
-            </button>
+            {user.role === 'admin' && (
+              <>
+                <button
+                  onClick={() => setActiveTab('embed-code')}
+                  className={`py-3 px-5 font-bold text-sm tracking-tight border-b-2 whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'embed-code'
+                      ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold'
+                      : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                  }`}
+                >
+                  <Code className="w-4 h-4" /> Get GHL Embed Widget
+                </button>
 
-            <button
-              onClick={() => setActiveTab('methodology')}
-              className={`py-3 px-5 font-bold text-sm tracking-tight border-b-2 whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
-                activeTab === 'methodology'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold'
-                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <HelpCircle className="w-4 h-4" /> How This Works
-            </button>
+                <button
+                  onClick={() => setActiveTab('methodology')}
+                  className={`py-3 px-5 font-bold text-sm tracking-tight border-b-2 whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'methodology'
+                      ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold'
+                      : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                  }`}
+                >
+                  <HelpCircle className="w-4 h-4" /> How This Works
+                </button>
+              </>
+            )}
           </div>
 
           {/* CONTENT RENDERING FOR ACTIVE TAB */}
@@ -536,7 +540,7 @@ export default function App() {
               </motion.div>
             )}
 
-            {activeTab === 'embed-code' && (
+            {activeTab === 'embed-code' && user.role === 'admin' && (
               <motion.div
                 key="embed-tab"
                 initial={{ opacity: 0, y: 10 }}
@@ -553,7 +557,7 @@ export default function App() {
               </motion.div>
             )}
 
-            {activeTab === 'methodology' && (
+            {activeTab === 'methodology' && user.role === 'admin' && (
               <motion.div
                 key="methodology-tab"
                 initial={{ opacity: 0, y: 10 }}

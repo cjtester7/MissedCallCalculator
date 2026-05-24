@@ -1,8 +1,8 @@
 /**
  * Missed Call Revenue Calculator
- * Version: v3
- * Changes: Enhanced contrast of grey texts (e.g., changing slate-500/slate-400 to slate-300) in dark mode to prevent fading.
- * Made the ROI and numerical descriptions much more visible and readable against the black background.
+ * Version: v4
+ * Changes: Enhanced contrast and visibility of the 'Est. Monthly Lost Revenue' text and figures.
+ * Rendered the leakage numbers in high-contrast vibrant colors to pop beautifully in both dark and light modes.
  */
 
 import { motion } from 'motion/react';
@@ -97,7 +97,7 @@ export default function StatsDashboard({
           </div>
 
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400">
               {formattedMonth}
             </span>
             <span className="text-xs text-slate-400 dark:text-slate-300 font-medium">/ month</span>
